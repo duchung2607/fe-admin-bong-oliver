@@ -15,8 +15,10 @@ import { Menu, Button } from "antd";
 import { NavLink, useLocation } from "react-router-dom";
 import logo from "../../assets/images/a.png";
 import Product from "../../pages/Product/Product";
-import { AppstoreOutlined, CalendarOutlined, DashboardOutlined, LogoutOutlined, PicRightOutlined, SnippetsOutlined, UserAddOutlined, UserOutlined } from "@ant-design/icons";
-
+import { AppstoreOutlined, CalendarOutlined, DashboardOutlined, DollarOutlined, LogoutOutlined, MessageOutlined, PicRightOutlined, SnippetsOutlined, StarFilled, StarOutlined, UserAddOutlined, UserOutlined } from "@ant-design/icons";
+import { faUserHair } from '@fortawesome/free-regular-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import {GiHairStrands} from '@react-icons/gi'
 function Sidenav({ color }) {
   const { pathname } = useLocation();
   const page = pathname.replace("/", "");
@@ -204,7 +206,6 @@ function Sidenav({ color }) {
                 background: page === "dashboard" ? color : "",
               }}
             >
-              {/* {dashboard} */}
               <DashboardOutlined />
             </span>
             <span className="label">Dashboard</span>
@@ -224,7 +225,7 @@ function Sidenav({ color }) {
             <span className="label">Calendar</span>
           </NavLink>
         </Menu.Item>
-        
+
         <Menu.Item key="3">
           <NavLink to="/users">
             <span
@@ -246,13 +247,25 @@ function Sidenav({ color }) {
                 background: page === "services" ? color : "",
               }}
             >
-              {/* {tables} */}
               <PicRightOutlined />
             </span>
             <span className="label">Services</span>
           </NavLink>
         </Menu.Item>
         <Menu.Item key="5">
+          <NavLink to="/hair-style">
+            <span
+              className="icon"
+              style={{
+                background: page === "hair-style" ? color : "",
+              }}
+            >
+              {/* <GiHairStrands /> */}
+            </span>
+            <span className="label">Hair Style</span>
+          </NavLink>
+        </Menu.Item>
+        <Menu.Item key="6">
           <NavLink to="/booking">
             <span
               className="icon"
@@ -260,113 +273,85 @@ function Sidenav({ color }) {
                 background: page === "booking" ? color : "",
               }}
             >
-              {/* {tables} */}
               <SnippetsOutlined />
             </span>
             <span className="label">Booking</span>
           </NavLink>
         </Menu.Item>
-        <Menu.Item key="6">
-          <NavLink to="/product">
-            <span
-              className="icon"
-              style={{
-                background: page === "product" ? color : "",
-              }}
-            >
-              {/* <FontAwesomeIcon icon="fa-duotone fa-sitemap" /> */}
-              <AppstoreOutlined />
-            </span>
-            <span className="label">Product</span>
-          </NavLink>
-        </Menu.Item>
+
         <Menu.Item key="7">
-          <NavLink to="/tables">
+          <NavLink to="/rate">
             <span
               className="icon"
               style={{
-                background: page === "tables" ? color : "",
+                background: page === "rate" ? color : "",
               }}
             >
-              {tables}
+              <StarOutlined />
             </span>
-            <span className="label">Tables</span>
-          </NavLink>
-        </Menu.Item>
-        <Menu.Item key="8">
-          <NavLink to="/billing">
-            <span
-              className="icon"
-              style={{
-                background: page === "billing" ? color : "",
-              }}
-            >
-              {billing}
-            </span>
-            <span className="label">Billing</span>
+            <span className="label">Rate</span>
           </NavLink>
         </Menu.Item>
 
-        <Menu.Item className="menu-item-header" key="8">
-          Account Pages
-        </Menu.Item>
-        <Menu.Item key="9">
-          <NavLink to="/profile">
+        <Menu.Item key="8">
+          <NavLink to="/payment">
             <span
               className="icon"
               style={{
-                background: page === "profile" ? color : "",
+                background: page === "payment" ? color : "",
               }}
             >
-              {profile}
+              <DollarOutlined />
             </span>
-            <span className="label">Profile</span>
+            <span className="label">Payment</span>
           </NavLink>
         </Menu.Item>
-        {/* <Menu.Item key="10">
-          <NavLink to="/sign-in">
-            <span className="icon">{signin}</span>
-            <span className="label">Sign In</span>
+
+        <Menu.Item key="9">
+          <NavLink to="/chat">
+            <span
+              className="icon"
+              style={{
+                background: page === "chat" ? color : "",
+              }}
+            >
+              <MessageOutlined />
+            </span>
+            <span className="label">Chat</span>
           </NavLink>
         </Menu.Item>
+
+        <Menu.Item className="menu-item-header" key="10">
+          Category
+        </Menu.Item>
+
         <Menu.Item key="11">
-          <NavLink to="/sign-up">
-            <span className="icon">{signup}</span>
-            <span className="label">Sign Up</span>
+          <NavLink to="/service-type">
+            <span
+              className="icon"
+              style={{
+                background: page === "service-type" ? color : "",
+              }}
+            >
+              <AppstoreOutlined />
+            </span>
+            <span className="label">Service type</span>
           </NavLink>
-        </Menu.Item> */}
+        </Menu.Item>
 
         <Menu.Item className="menu-item-header" key="12">
           Functions
         </Menu.Item>
 
         <Menu.Item key="13" onClick={() => handleLogout()}>
-          {/* <NavLink to={''}> */}
           <a>
             <span className="icon">
               <LogoutOutlined />
-              {/* {signup} */}
             </span>
             <span className="label">Logout</span>
-            {/* </NavLink> */}
           </a>
         </Menu.Item>
-
       </Menu>
-      {/* <div className="aside-footer">
-        <div
-          className="footer-box"
-          style={{
-            background: color,
-          }}
-        >
-
-          <p>Logout</p>
-          <Button type="primary" className="ant-btn-sm ant-btn-block">
-            DOCUMENTATION
-          </Button>
-        </div>
-      </div> */}
     </>
   );
 }

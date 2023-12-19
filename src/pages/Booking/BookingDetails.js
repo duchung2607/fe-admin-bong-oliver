@@ -261,6 +261,7 @@ function BookingDetails() {
                                 <Select>
                                     <Select.Option name="status" value={"wait"}>Wait</Select.Option>
                                     <Select.Option name="status" value={"done"}>Done</Select.Option>
+                                    <Select.Option name="status" value={"cancel"}>Cancel</Select.Option>
                                 </Select>
                             </Form.Item>
 

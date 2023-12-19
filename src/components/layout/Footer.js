@@ -23,8 +23,8 @@ function Footer() {
           <div className="copyright">
             © 2023, made with
             {<HeartFilled />} by
-            <a href="https://facebook.com/duydom2607" className="font-weight-bold" target="_blank">
-              ĐỨC HÙNG
+            <a href="https://facebook.com/nguyen.hoahong209" className="font-weight-bold" target="_blank">
+              HOA HỒNG
             </a>
           </div>
         </Col>

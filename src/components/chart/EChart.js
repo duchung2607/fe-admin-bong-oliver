@@ -132,16 +132,22 @@ function EChart(props) {
       <div id="chart">
         <div className="linechart">
           <div>
-            <Title level={5}>Active Users</Title>
-            <Paragraph className="lastweek">
-              than last month 
-              {
-                props?.data?.volatilityUser < 0 ? <span className="bnb2" style={{color:"red", marginLeft:"5px"}}>{props?.data?.volatilityUser*100}%</span>
-                :
-                <span className="bnb2" style={{marginLeft:"5px"}}>+{props?.data?.volatilityUser*100}%</span>
-              }
-              
-            </Paragraph>
+            <Title level={5}>{props?.title}</Title>
+            {
+              props?.volatility ?
+              <Paragraph className="lastweek">
+                so với tháng trước
+                {
+                  props?.volatility < 0 ? <span className="bnb2" style={{ color: "red", marginLeft: "5px" }}>{(props?.volatility * 100).toFixed(2)}%</span>
+                    :
+                    <span className="bnb2" style={{ marginLeft: "5px" }}>+{(props?.volatility * 100).toFixed(2)}%</span>
+                }
+              </Paragraph>
+              :
+              <Paragraph className="lastweek">
+                Top 5 favorite services
+              </Paragraph>
+            }
           </div>
           {/* <div className="sales">
             <ul>
@@ -152,12 +158,12 @@ function EChart(props) {
         </div>
         <ReactApexChart
           className="bar-chart"
-          options={options}
+          options={props?.options}
           series={
             [
               {
-                name: "Số lượng",
-                data: props?.data?.statisticalUser,
+                name: props?.nameCol,
+                data: props?.data,
                 color: "#fff",
               },
             ]

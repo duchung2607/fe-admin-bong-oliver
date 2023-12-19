@@ -54,35 +54,22 @@ const { Title } = Typography;
 // table code start
 const columns = [
   {
+    title: "ID",
+    dataIndex: "id",
+    key: "id",
+    width: "30%",
+  },
+  {
     title: "NAME",
     dataIndex: "name",
     key: "name",
-    width: "20%",
-  },
-  {
-    title: "DESCRIPTION",
-    dataIndex: "description",
-    key: "description",
-    width: "30%",
-  },
-
-  {
-    title: "PRICE",
-    key: "price",
-    dataIndex: "price",
-    width: "20%",
-  },
-  {
-    title: "SERVICE TYPE",
-    key: "serviceType",
-    dataIndex: "serviceType",
-    width: "15%",
+    width: "50%",
   },
   {
     title: "FUNCTION",
     key: "function",
     dataIndex: "function",
-    with: '10%',
+    with: '20%',
   },
 ];
 
@@ -96,83 +83,44 @@ const modules = {
   ],
 };
 
-function Services() {
-  const [services, setService] = useState([])
-  const [serviceType, setServiceType] = useState([])
+function ServiceType() {
+  const [types, setTypes] = useState([])
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
   const [form] = Form.useForm()
+  const [formEdit] = Form.useForm()
   const [key, setKey] = useState("")
   const [description, setDescription] = useState()
   const history = useHistory()
   const [loading, setLoading] = useState(true)
   const [wait, setWait] = useState(false)
+  const [edit, setEdit] = useState()
 
   useEffect(() => {
     fetchData(page, 10, key)
-    getServiceTypes()
 
   }, [page])
 
-  const getServiceTypes = async () => {
-    var res = await axios.get("https://localhost:7125/api/service/type")
-    if (res?.data?.code == 200) setServiceType(res?.data?.data)
-  }
-
   const fetchData = async (page = 1, pageSize = 10, key = "", sortBy = "id") => {
-    console.log(key)
     setLoading(true)
-    const res = await axios.get("https://localhost:7125/api/service?page=" + page + "&pageSize=" + pageSize + "&key=" + key + "&sortBy=" + sortBy)
+    const res = await axios.get("https://localhost:7125/api/service/type")
     setTotal(res?.data?.total)
     console.log(res.data.data)
     const data = []
     res.data.data.map((item, index) => (
       data.push({
         key: index,
-        name: (
-          <>
-            <Avatar.Group>
-              <Avatar
-                className="shape-avatar"
-                shape="square"
-                size={40}
-                src={item?.image}
-              ></Avatar>
-              <div className="avatar-info">
-                <Title level={5}>{item?.name}</Title>
-                <p>{item?.price}</p>
-              </div>
-            </Avatar.Group>{" "}
-          </>
-        ),
-        description: (
-          <>
-            <div className="author-info">
-              <Title level={5} style={{
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                width: "200px"
-              }}>
-                {/* <div dangerouslySetInnerHTML={{ __html: item?.description }} /> */}
-                {item?.description}
-                </Title>
-              {/* <p>Developer</p> */}
-            </div>
-          </>
-        ),
-
-        price: (
+        id: (
           <>
             <div>
-              {item?.price}
+              {item?.id}
             </div>
           </>
         ),
-        serviceType: (
+        name: (
           <>
-            <div className="ant-employed">
-              <span>{item?.serviceTypeDTO?.name}</span>
+            <div>
+              {item?.name}
             </div>
           </>
         ),
@@ -180,10 +128,11 @@ function Services() {
           <>
             <EditTwoTone
               style={{ fontSize: 18, color: "blue", marginLeft: 12, cursor: "pointer" }}
-              onClick={() => history.push("services/" + item?.id)}
+              onClick={() => handleShowEdit(item)}
             />
-            <Popconfirm title="Are you sure to delete this service"
-              onConfirm={() => handleDeleteService(item?.id)}>
+            <Popconfirm title="Are you sure to delete this type"
+              onConfirm={() => handleDeleteType(item?.id)}
+            >
               <DeleteOutlined
                 style={{ fontSize: 18, color: "red", marginLeft: 12, cursor: "pointer" }}
               />
@@ -193,12 +142,12 @@ function Services() {
       })
     ))
 
-    setService(data)
+    setTypes(data)
     setLoading(false)
   }
 
-  const handleDeleteService = async (id) => {
-    var res = await axios.delete("https://localhost:7125/api/service/" + id)
+  const handleDeleteType = async (id) => {
+    var res = await axios.delete("https://localhost:7125/api/service/type/" + id)
     console.log(res.data)
     if (res?.data?.code == 200) {
       toast.success("Xóa thành công", {
@@ -222,21 +171,8 @@ function Services() {
   const handleOk = async () => {
     setWait(true)
     var a = form.getFieldValue()
-
-    const url = await UploadImageAPI(a.image.file)
-
-    var service = {
-      id: 0,
-      name: a.name,
-      image: url,
-      description: a.description,
-      price: a.price,
-      serviceTypeId: a.serviceTypeId
-    }
-    console.log(service)
-
     try {
-      var res = await axios.post("https://localhost:7125/api/service", service)
+      var res = await axios.post(`https://localhost:7125/api/service/type?name=${a.name}`)
       console.log(res)
       if (res?.data?.code == 200) {
         setIsModalOpen(false);
@@ -245,7 +181,7 @@ function Services() {
         })
         setTimeout(() => {
           window.location.reload()
-        }, 100);
+        }, 1000);
       }
     } catch (e) {
       toast.error(e.response.data.message, {
@@ -259,6 +195,37 @@ function Services() {
     setIsModalOpen(false);
   };
 
+  const handleShowEdit = (item) => {
+    formEdit.setFieldsValue({
+      name: item.name
+    })
+    setEdit(item)
+  }
+
+  const handleUpdate = async () => {
+    setWait(true)
+    var a = formEdit.getFieldValue()
+
+    try {
+      var res = await axios.put(`https://localhost:7125/api/service/type/${edit?.id}?name=${a.name}`)
+      console.log(res)
+      if (res?.data?.code == 200) {
+        setEdit()
+        toast.success("Cập nhật thành công", {
+          position: toast.POSITION.TOP_RIGHT
+        })
+        setTimeout(() => {
+          window.location.reload()
+        }, 1000);
+      }
+    } catch (e) {
+      toast.error(e.response.data.message, {
+        position: toast.POSITION.TOP_RIGHT
+      })
+    }
+    setWait(false)
+  }
+
   return (
     <>
       {
@@ -270,21 +237,20 @@ function Services() {
             <Card
               bordered={false}
               className="criclebox tablespace mb-24"
-              title="Services list"
+              title="Types list"
               extra={
                 <>
                   <Space direction="horizontal">
-                    <div className="search-container">
+                    {/* <div className="search-container">
                       <div className="search-input-container">
                         <input type="text" className="search-input" placeholder="Search" onChange={(e) => setKey(e.target.value)} />
                       </div>
                       <div className="search-button-container" style={{ color: "#fff" }}>
                         <button className="search-button" onClick={handleSearch}>
                           <SearchOutlined />
-                          {/* <i className="fas fa-search" /> */}
                         </button>
                       </div>
-                    </div>
+                    </div> */}
                     <Button type="primary" onClick={showModal}>
                       <FileAddOutlined style={{ fontSize: 18 }} />
                       Add
@@ -296,7 +262,7 @@ function Services() {
               <div className="table-responsive">
                 <Table
                   columns={columns}
-                  dataSource={services}
+                  dataSource={types}
                   pagination={false}
                   loading={loading}
                   className="ant-border-space"
@@ -307,7 +273,7 @@ function Services() {
           </Col>
         </Row>
 
-        <Modal title="Form create service" open={isModalOpen}
+        <Modal title="Form create service type" open={isModalOpen}
           onOk={() => {
             form.validateFields().then(() => {
               handleOk()
@@ -325,99 +291,45 @@ function Services() {
               span: 24,
             }}
             layout="vertical"
-          // disabled={componentDisabled}
-          // style={{
-          //     maxWidth: 600,
-          // }}
           >
-            <Row gutter={[24, 0]} >
-              <Col span={24} md={24}>
-                <Form.Item name="name" label="Name"
-                  rules={[
-                    {
-                      required: true,
-                    },
-                    {
-                      type: 'string',
-                    },
-                  ]}
-                >
-                  <Input name="name" />
-                </Form.Item>
-              </Col>
-            </Row>
-
-            {/* <Form.Item name="image" label="Image"
-              rules={[
-                {
-                  required: true,
-                },
-                {
-                  type: 'string',
-                },
-              ]}
-            >
-              <Input name="image" />
-            </Form.Item> */}
-
-            <Form.Item name="image" label="Image"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <Upload
-                multiple={false}
-                name="image"
-                listType="picture"
-                beforeUpload={() => false}
-                defaultFileList={[]}
-              >
-                <Button icon={<UploadOutlined />}>Upload</Button>
-              </Upload>
-            </Form.Item>
-
-            <Form.Item name="description" label="Description"
+            <Form.Item name="name" label="Name"
               rules={[{ required: true },
               {
                 type: 'string',
               },]}
             >
-              <ReactQuill theme="snow" modules={modules} />
-              {/* <TextArea name="description" rows={4} /> */}
+              <Input></Input>
             </Form.Item>
+          </Form>
+        </Modal>
 
-            <Row gutter={[24, 0]} >
-              <Col span={24} md={12}>
-                <Form.Item name="price" label="Price"
-                  rules={[
-                    {
-                      required: true,
-                    },
-                    {
-                      type: "number",
-                      min: 0
-                    }
-                  ]}
-                >
-                  <InputNumber name="price" style={{ width: "100%", height: "40px", borderRadius: "6px" }} />
-                </Form.Item>
-              </Col>
-              <Col span={24} md={12}>
-                <Form.Item label="Service Type" name="serviceTypeId"
-                  rules={[{ required: true }]}
-                >
-                  <Select>
-                    {
-                      serviceType?.map((service, index) => (
-                        <Select.Option value={service?.id}>{service.name}</Select.Option>
-                      ))
-                    }
-                  </Select>
-                </Form.Item>
-              </Col>
-            </Row>
+        <Modal title="Edit service type" open={edit ? true : false}
+          onOk={() => {
+            formEdit.validateFields().then(() => {
+              handleUpdate()
+            });
+          }}
+          onCancel={() => setEdit()} visible={edit}
+          width={800}
+        >
+          <Form
+            form={formEdit}
+            labelCol={{
+              span: 24,
+            }}
+            wrapperCol={{
+              span: 24,
+            }}
+            layout="vertical"
+          >
+            <Form.Item name="name" label="Name"
+              rules={[{ required: true },
+              {
+                type: 'string',
+              },]}
+            >
+              <Input name='name'></Input>
+            </Form.Item>
           </Form>
         </Modal>
       </div>
@@ -425,4 +337,4 @@ function Services() {
   );
 }
 
-export default Services;
+export default ServiceType

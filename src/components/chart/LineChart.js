@@ -99,20 +99,20 @@ function LineChart(props) {
     <>
       <div className="linechart">
         <div>
-          <Title level={5}>Bookings</Title>
+          <Title level={5}>Doanh thu</Title>
           <Paragraph className="lastweek">
-            than last month
+            so với tháng trước
             {
-              props?.data?.volatilityRevenue < 0 ? <span className="bnb2" style={{ color: "red", marginLeft: "5px" }}>{props?.data?.volatilityRevenue * 100}%</span>
+              props?.data?.volatilityRevenue < 0 ? <span className="bnb2" style={{ color: "red", marginLeft: "5px" }}>{(props?.data?.volatilityRevenue * 100).toFixed(2)}%</span>
                 :
-                <span className="bnb2" style={{ marginLeft: "5px" }}>+{props?.data?.volatilityRevenue * 100}%</span>
+                <span className="bnb2" style={{ marginLeft: "5px" }}>+{(props?.data?.volatilityRevenue * 100).toFixed(2)}%</span>
             }
           </Paragraph>
         </div>
         <div className="sales">
           <ul>
-            <li>{<MinusOutlined />} Traffic</li>
-            <li>{<MinusOutlined />} Sales</li>
+            {/* <li>{<MinusOutlined />} Traffic</li> */}
+            <li>{<MinusOutlined />} Doanh thu</li>
           </ul>
         </div>
       </div>
@@ -124,7 +124,7 @@ function LineChart(props) {
         series={
           [
             {
-              name: "Bookings",
+              name: "Doanh thu",
               data: props?.data?.statisticalRevenue,
               offsetY: 0,
             },

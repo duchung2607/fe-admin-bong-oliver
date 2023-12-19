@@ -133,10 +133,14 @@ function Booking() {
                 <Button type="default" className="tag-primary">
                   WAIT
                 </Button>
-                :
-                <Button type="primary" className="tag-primary">
-                  DONE
-                </Button>
+                : item?.status == "done" ?
+                  <Button type="primary" className="tag-primary">
+                    DONE
+                  </Button>
+                  :
+                  <Button type="primary" danger className="tag-primary">
+                    CANCEL
+                  </Button>
             }
           </>
         ),
@@ -236,7 +240,7 @@ function Booking() {
       })
       setTimeout(() => {
         window.location.reload()
-      }, 2000);
+      }, 1000);
     }
   }
 
@@ -298,7 +302,7 @@ function Booking() {
           </Col>
         </Row>
 
-        <Modal title="Form create service" open={isModalOpen}
+        <Modal title="Form create booking" open={isModalOpen}
           onOk={() => {
             form.validateFields().then(() => {
               handleOk()

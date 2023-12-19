@@ -13,7 +13,7 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import Home from "./pages/Home";
 import Tables from "./pages/Tables";
 import Billing from "./pages/Billing";
-import Rtl from "./pages/Rtl";
+// import Rtl from "./pages/Quill";
 import Profile from "./pages/Profile";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
@@ -31,11 +31,16 @@ import ServiceDetails from "./pages/Services/ServiceDetails";
 import ProductDetails from "./pages/Product/ProductDetails";
 import UploadFile from "./pages/UploadFile";
 import BookingDetails from "./pages/Booking/BookingDetails";
-import Items from "./pages/Items";
-import Videos from "./pages/Videos";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import Calendar from "./pages/Calendar/Calendar";
+import Chat from "./pages/Chat/Chat";
+import Rate from "./pages/Rate/Rate";
+import Payment from "./pages/Payment/Payment";
+import ServiceType from "./pages/Services/ServiceType";
+import HairStyle from "./pages/HairStyle/HairStyle";
+import HairStyleDetail from "./pages/HairStyle/HairStyleDetail";
+// import Quill from "./pages/Quill";
 
 function App() {
   if ((sessionStorage.getItem("token")?.length > 10))
@@ -54,25 +59,36 @@ function App() {
             <Route exact path="/services" component={Services} />
             <Route exact path="/services/:id" component={ServiceDetails} />
 
+            <Route exact path="/hair-style" component={HairStyle} />
+            <Route exact path="/hair-style/:id" component={HairStyleDetail} />
+
+            <Route exact path="/service-type" component={ServiceType} />
+            {/* //<Route exact path="/servicetypes/:id" component={ServiceDetails} /> */}
+
             <Route exact path="/booking" component={Booking} />
             <Route exact path="/booking/:id" component={BookingDetails} />
 
             <Route exact path="/product" component={Product} />
             <Route exact path="/product/:id" component={ProductDetails} />
 
+            <Route exact path="/rate" component={Rate} />
+            {/* <Route exact path="/rate/:id" component={ProductDetails} /> */}
+
+            <Route exact path="/payment" component={Payment} />
+            {/* <Route exact path="/rate/:id" component={ProductDetails} /> */}
+
             <Route exact path="/calendar" component={Calendar} />
+            <Route exact path="/chat" component={Chat} />
 
 
 
             <Route exact path="/tables" component={Tables} />
             <Route exact path="/billing" component={Billing} />
-            {/* <Route exact path="/rtl" component={Rtl} /> */}
+            {/* //<Route exact path="/quill" component={Quill} /> */}
             <Route exact path="/profile" component={Profile} />
             {/* <Redirect from="*" to="/dashboard" /> */}
 
             <Route exact path="/upload" component={UploadFile} />
-            <Route exact path="/item" component={Items} />
-            <Route exact path="/videos" component={Videos} />
           </Main>
           <Route path="*" component={SignUp} />
         </Switch>

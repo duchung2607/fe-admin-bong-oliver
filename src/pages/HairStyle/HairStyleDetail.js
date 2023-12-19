@@ -40,12 +40,10 @@ const modules = {
         ['link', 'image'],
     ],
 };
-
-function ServiceDetails() {
+function HairStyleDetail() {
     const history = useHistory()
     const [imageURL, setImageURL] = useState(false);
     const [form] = Form.useForm()
-    const [formWalet] = Form.useForm()
     const [formData, setFormData] = useState({})
     const [loading, setLoading] = useState(false);
     const params = useParams()
@@ -56,14 +54,14 @@ function ServiceDetails() {
     }, [])
 
     const fecthData = async (id) => {
-        var res = await axios.get("https://localhost:7125/api/service/" + id)
+        var res = await axios.get("https://localhost:7125/api/hair/" + id)
 
         form.setFieldsValue({
             name: res?.data?.data?.name,
-            description: res?.data?.data?.description,
             image: res?.data?.data?.image,
-            price: res?.data?.data?.price,
-            serviceType: res?.data?.data?.serviceTypeDTO?.name
+            type: res?.data?.data?.type,
+            sortDes: res?.data?.data?.sortDes,
+            description: res?.data?.data?.description,
         })
 
         setFormData(res?.data?.data)
@@ -76,18 +74,15 @@ function ServiceDetails() {
             if (values.imageUpload)
                 url = await UploadImageAPI(values.imageUpload.file)
 
-            const service = {
-                id: 0,
+            const hairstyle = {
                 name: values.name,
+                image: url? url : values.image,
+                type: values.type,
+                sortDes: values.sortDes,
                 description: values.description,
-                price: values.price,
-                image: values.imageUpload ? url : values.image,
-                serviceTypeId: formData.serviceTypeDTO.id
             }
 
-            console.log(service)
-
-            var res = await axios.put("https://localhost:7125/api/service/" + params?.id, service)
+            var res = await axios.put("https://localhost:7125/api/hair/" + params?.id, hairstyle)
             if (res?.data?.code == 200) {
                 toast.success("Cập nhật thành công", {
                     position: toast.POSITION.TOP_RIGHT
@@ -113,7 +108,7 @@ function ServiceDetails() {
                 <Col xs={24} md={16} className="mb-24">
                     <Card
                         bordered={false}
-                        title={<h6 className="font-semibold m-0">Service Information</h6>}
+                        title={<h6 className="font-semibold m-0">Hair style Information</h6>}
                         className="header-solid h-full card-profile-information"
                         // extra={<Button type="link">{pencil}</Button>}
                         bodyStyle={{ paddingTop: 0, paddingBottom: 16 }}
@@ -128,10 +123,6 @@ function ServiceDetails() {
                             }}
                             layout="vertical"
                             onFinish={onFinish}
-                        // disabled={componentDisabled}
-                        // style={{
-                        //     maxWidth: 600,
-                        // }}
                         >
                             <Form.Item name="name" label="Name"
                                 rules={[{ required: true }, { type: 'string' },]}
@@ -139,24 +130,30 @@ function ServiceDetails() {
                                 <Input name="name" />
                             </Form.Item>
 
+                            <Form.Item label="Type" name="type"
+                                rules={[{ required: true }]}
+                            >
+                                <Select>
+                                    <Select.Option value={true}>Nam</Select.Option>
+                                    <Select.Option value={false}>Nữ</Select.Option>
+                                </Select>
+                            </Form.Item>
+
+                            <Form.Item name="sortDes" label="Sort Description"
+                                rules={[{ required: true }, { type: 'string' },]}
+                            >
+                                <Input name="sortDes" />
+                            </Form.Item>
+
                             <Form.Item name="description" label="Description"
                                 rules={[{ required: true }, { type: 'string' },]}
                             >
                                 <ReactQuill theme="snow" modules={modules} />
-
-                                {/* <TextArea name="description" /> */}
-                            </Form.Item>
-
-                            <Form.Item name="price" label="Price"
-                                rules={[{ required: true }]}
-                            >
-                                <InputNumber name="price" style={{ width: "100%", height: "40px", borderRadius: "6px" }} />
                             </Form.Item>
 
                             <Form.Item name="image" label="Image"
                                 rules={[{ required: true }]}
                             >
-
                                 <Input name="image" disabled />
                             </Form.Item>
 
@@ -170,12 +167,6 @@ function ServiceDetails() {
                                 >
                                     <Button icon={<UploadOutlined />}>Upload</Button>
                                 </Upload>
-                            </Form.Item>
-
-                            <Form.Item name="serviceType" label="Service Type"
-                                rules={[{ required: true }, { type: 'string' },]}
-                            >
-                                <Input name="serviceType" disabled />
                             </Form.Item>
 
                             <Form.Item style={{ textAlign: "center" }}>
@@ -212,40 +203,6 @@ function ServiceDetails() {
 
                             </Card>
                         </Col>
-                        {/* </Row> */}
-                        {/* <Row gutter={[24, 0]}> */}
-                        {/* <Col xs={24} className="mb-24">
-                            <Card
-                                bordered={false}
-                                title={<h6 className="font-semibold m-0">Walet Info</h6>}
-                                className="header-solid h-full"
-                                bodyStyle={{ paddingTop: 0, paddingBottom: 16 }}
-                            >
-                                <Form
-                                    form={formWalet}
-                                    labelCol={{
-                                        span: 4,
-                                    }}
-                                    wrapperCol={{
-                                        span: 24,
-                                    }}
-                                    layout="vertical"
-                                    onFinish={onUpdateMoney}
-                                >
-                                    <Form.Item label="Money" name="money"
-                                        rules={[
-                                            {
-                                                required: true,
-                                            }
-                                        ]}>
-                                        <InputNumber name='money' style={{ width: "100%", height: "40px", borderRadius: "6px" }} />
-                                    </Form.Item>
-                                    <Form.Item style={{ textAlign: "center" }}>
-                                        <Button htmlType="submit" type="primary">Save</Button>
-                                    </Form.Item>
-                                </Form>
-                            </Card>
-                        </Col> */}
                     </Row>
                 </Col>
             </Row>
@@ -253,5 +210,4 @@ function ServiceDetails() {
     );
 }
 
-export default ServiceDetails
-    ;
+export default HairStyleDetail

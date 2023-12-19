@@ -142,7 +142,7 @@ function Home() {
       ></path>
     </svg>,
   ];
-  
+
 
   const list = [
     {
@@ -316,6 +316,7 @@ function Home() {
 
   const [dataUser, setDataUser] = useState()
   const [dataRevenue, setDataRevenue] = useState()
+  const [serviceMost, setServiceMost] = useState()
   const [wait, setWait] = useState(false)
 
   useEffect(() => {
@@ -324,54 +325,247 @@ function Home() {
 
   const fetchData = async () => {
     setWait(true)
-    try{
+    try {
       var res = await axios.get("https://localhost:7125/api/statistical/user")
       setDataUser(res?.data?.data)
 
       var res = await axios.get("https://localhost:7125/api/statistical/revenue")
       setDataRevenue(res?.data?.data)
-    }catch(e){
+      console.log(res?.data?.data)
+
+      var res = await axios.get("https://localhost:7125/api/statistical/most")
+      setServiceMost(res?.data?.data)
+      console.log(optionMosts)
+    } catch (e) {
 
     }
     setWait(false)
   }
 
   const count = [
-    // {
-    //   today: "Today’s Sales",
-    //   title: "$53,000",
-    //   persent: "+30%",
-    //   icon: dollor,
-    //   bnb: "bnb2",
-    // },
     {
-      today: "Total Users",
+      today: "Số lượng người dùng",
       title: dataUser?.totalUser,
       // persent: "+20%",
       icon: profile,
       bnb: "bnb2",
     },
-    // {
-    //   today: "New Clients",
-    //   title: "+1,200",
-    //   persent: "-20%",
-    //   icon: heart,
-    //   bnb: "redtext",
-    // },
     {
-      today: "New Bookings",
+      today: "Booking mới",
       title: dataRevenue?.newBooking,
       persent: "",
       icon: <SnippetsOutlined />,
       bnb: "bnb2",
     },
+    {
+      today: "Tổng số booking",
+      title: dataRevenue?.totalBooking,
+      persent: "",
+      icon: heart,
+      bnb: "redtext",
+    },
+    {
+      today: "Doanh thu",
+      title: dataRevenue?.revenue.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }).replace(/\D/, '.')
+        // .replace("₫","VNĐ")
+        .replace("₫", "")
+      ,
+      persent: "",
+      icon: dollor,
+      bnb: "bnb2",
+    },
   ];
+
+  const optionUsers = {
+    chart: {
+      type: "bar",
+      width: "100%",
+      height: "auto",
+
+      toolbar: {
+        show: false,
+      },
+    },
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        columnWidth: "55%",
+        borderRadius: 5,
+      },
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    stroke: {
+      show: true,
+      width: 1,
+      colors: ["transparent"],
+    },
+    grid: {
+      show: true,
+      borderColor: "#ccc",
+      strokeDashArray: 2,
+    },
+    xaxis: {
+      categories: [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec"
+      ],
+      labels: {
+        show: true,
+        align: "right",
+        minWidth: 0,
+        maxWidth: 160,
+        style: {
+          colors: [
+            "#fff",
+            "#fff",
+            "#fff",
+            "#fff",
+            "#fff",
+            "#fff",
+            "#fff",
+            "#fff",
+            "#fff",
+            "#fff",
+            "#fff",
+            "#fff",
+            "#fff",
+          ],
+        },
+      },
+    },
+    yaxis: {
+      labels: {
+        show: true,
+        align: "right",
+        minWidth: 0,
+        maxWidth: 160,
+        style: {
+          colors: [
+            "#fff",
+            "#fff",
+            "#fff",
+            "#fff",
+            "#fff",
+            "#fff",
+            "#fff",
+            "#fff",
+            "#fff",
+            "#fff",
+            "#fff",
+            "#fff",
+            "#fff",
+          ],
+        },
+      },
+    },
+
+    tooltip: {
+      y: {
+        formatter: function (val) {
+          return "" + val + " Người";
+        },
+      },
+    },
+  }
+  
+  const optionMosts = {
+    chart: {
+      type: "bar",
+      width: "100%",
+      height: "auto",
+
+      toolbar: {
+        show: false,
+      },
+    },
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        columnWidth: "55%",
+        borderRadius: 5,
+      },
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    stroke: {
+      show: true,
+      width: 1,
+      colors: ["transparent"],
+    },
+    grid: {
+      show: true,
+      borderColor: "#ccc",
+      strokeDashArray: 2,
+    },
+    xaxis: {
+      categories: [
+        "Top 1",
+        "Top 2",
+        "Top 3",
+        "Top 4",
+        "Top 5"
+      ],
+      labels: {
+        show: true,
+        align: "right",
+        minWidth: 0,
+        maxWidth: 160,
+        style: {
+          colors: [
+            "#fff",
+            "#fff",
+            "#fff",
+            "#fff",
+            "#fff",
+          ],
+        },
+      },
+    },
+    yaxis: {
+      labels: {
+        show: true,
+        align: "right",
+        minWidth: 0,
+        maxWidth: 160,
+        style: {
+          colors: [
+            "#fff",
+            "#fff",
+            "#fff",
+            "#fff",
+            "#fff",
+          ],
+        },
+      },
+    },
+
+    tooltip: {
+      y: {
+        formatter: function (val) {
+          return "" + val + " Booking";
+        },
+      },
+    },
+  }
 
   return (
     <>
-    {
-      wait&& <Loading />
-    }
+      {
+        wait && <Loading />
+      }
       <div className="layout-content">
         <Row className="rowgap-vbox" gutter={[24, 0]}>
           {count.map((c, index) => (
@@ -406,15 +600,31 @@ function Home() {
         <Row gutter={[24, 0]}>
           <Col xs={24} sm={24} md={12} lg={12} xl={10} className="mb-24">
             <Card bordered={false} className="criclebox h-full">
-              <Echart data={dataUser} />
+              <Echart data={dataUser?.statisticalUser} options={optionUsers} volatility={dataUser?.volatilityUser}
+                title="Người dùng" nameCol="Số lượng" />
             </Card>
           </Col>
           <Col xs={24} sm={24} md={12} lg={12} xl={14} className="mb-24">
             <Card bordered={false} className="criclebox h-full">
-              <LineChart data = {dataRevenue} />
+              <LineChart data={dataRevenue} />
             </Card>
           </Col>
         </Row>
+
+        {/* <Row gutter={[24, 0]}>
+          <Col xs={24} sm={24} md={12} lg={12} xl={12} className="mb-24">
+            <Card bordered={false} className="criclebox h-full">
+              <Echart
+                title="Top services" data={serviceMost?.count} options={optionMosts}
+                nameCol="Dịch vụ" />
+            </Card>
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={12} xl={12} className="mb-24">
+            <Card bordered={false} className="criclebox h-full">
+              <Echart data={dataUser} options={optionUsers} />
+            </Card>
+          </Col>
+        </Row> */}
 
         {/* <Row gutter={[24, 0]}>
           <Col xs={24} sm={24} md={12} lg={12} xl={16} className="mb-24">

@@ -21,7 +21,7 @@ import {
   InputNumber,
 } from "antd";
 
-import { DeleteOutlined, EditTwoTone, SearchOutlined, ToTopOutlined, UploadOutlined, UserAddOutlined } from "@ant-design/icons";
+import { CheckCircleOutlined, CheckOutlined, CloseOutlined, DeleteOutlined, EditTwoTone, SearchOutlined, ToTopOutlined, UploadOutlined, UserAddOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 
 
@@ -157,12 +157,24 @@ function Users() {
               style={{ fontSize: 18, color: "blue", marginLeft: 12, cursor: "pointer" }}
               onClick={() => history.push("users/" + item?.username)}
             />
-            <Popconfirm title="Are you sure to delete this service"
-              onConfirm={() => handleDeleteUser(item?.username)}>
-              <DeleteOutlined
-                style={{ fontSize: 18, color: "red", marginLeft: 12, cursor: "pointer" }}
-              />
-            </Popconfirm>
+            {
+              item?.isDelete == false ?
+                <Popconfirm title="Are you sure to denine this user"
+                  onConfirm={() => handleDeleteUser(item?.username)}>
+                  {/* <DeleteOutlined */}
+                  <CloseOutlined
+                    style={{ fontSize: 18, color: "red", marginLeft: 12, cursor: "pointer" }}
+                  />
+                </Popconfirm>
+                :
+                <Popconfirm title="Are you sure to un denine this user"
+                  onConfirm={() => handleDeleteUser(item?.username)}>
+                  {/* <CheckOutlined */}
+                  <CheckCircleOutlined
+                    style={{ fontSize: 18, color: "green", marginLeft: 12, cursor: "pointer" }}
+                  />
+                </Popconfirm>
+            }
           </>
         ),
       })
@@ -228,7 +240,7 @@ function Users() {
     var res = await axios.delete("https://localhost:7125/api/users/" + username)
     console.log(res.data)
     if (res.data.code == 200) {
-      toast.success("Xóa thành công", {
+      toast.success("Thành công", {
         position: toast.POSITION.TOP_RIGHT
       })
       fetchData()
